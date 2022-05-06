@@ -3,11 +3,7 @@ package com.example.task3.word
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Toast
-import android.widget.Toast.LENGTH_SHORT
-import com.example.task3.App
-import com.example.task3.App.Navigation.router
-import com.example.task3.R
+import com.example.task3.App.Companion.router
 import com.example.task3.databinding.FragmentWordBinding
 import com.example.task3.mvpuser.TranslateScreen
 

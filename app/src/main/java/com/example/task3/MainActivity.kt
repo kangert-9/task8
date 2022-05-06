@@ -2,8 +2,8 @@ package com.example.task3
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.task3.App.Navigation.navigatorHolder
-import com.example.task3.App.Navigation.router
+import com.example.task3.App.Companion.navigatorHolder
+import com.example.task3.App.Companion.router
 import com.example.task3.navigation.CustomNavigator
 import com.example.task3.word.WordScreen
 
