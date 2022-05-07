@@ -3,9 +3,10 @@ package com.example.task3
 import com.example.task3.data.DataModel
 import com.example.task3.data.TranslateRepository
 import com.example.task3.data.TranslateRepositoryImpl
-import com.example.task3.mvpuser.AppState
-import com.example.task3.mvpuser.BaseViewModel
+import com.example.task3.mvpuser.TranslateFragment
 import com.example.task3.mvpuser.TranslateViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val application = module {
@@ -13,6 +14,9 @@ val application = module {
         TranslateRepositoryImpl()
     }
 }
-    val mainScreen = module {
-        factory< BaseViewModel <AppState>> { TranslateViewModel() }
+
+val mainScreen = module {
+    scope(named<TranslateFragment>()) {
+        viewModel { TranslateViewModel() }
     }
+}

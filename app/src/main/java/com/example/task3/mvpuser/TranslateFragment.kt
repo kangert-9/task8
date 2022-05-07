@@ -3,18 +3,23 @@ package com.example.task3.mvpuser
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.task3.R
 import com.example.task3.databinding.ViewTranslateBinding
 import com.example.task3.recycler.TranslateAdapter
+import com.example.task3.viewById
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.ext.android.inject
+import org.koin.androidx.scope.*
 
 class TranslateFragment: Fragment() {
 
     private val wordAdapter = TranslateAdapter()
     private lateinit var viewBinding: ViewTranslateBinding
+    private lateinit var model: TranslateViewModel
+    private val recyclerView by viewById<RecyclerView>(R.id.users_recycler)
 
-    private val viewModel: TranslateViewModel by lazy { ViewModelProvider(this).get(TranslateViewModel::class.java) }
 
     private val word: String by lazy {
         arguments?.getString(ARG_WORD).orEmpty()
@@ -23,8 +28,7 @@ class TranslateFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding = ViewTranslateBinding.bind(view)
-        viewModel.getLiveData().observe(viewLifecycleOwner) { renderData(it) }
-        viewModel.getData(word, false)
+        iniViewModel()
     }
 
 
@@ -32,7 +36,7 @@ class TranslateFragment: Fragment() {
         when (appState) {
             is AppState.Success -> {
                 viewBinding.loadingLayout.visibility = View.GONE
-                val recyclerView = viewBinding.usersRecycler
+                //val recyclerView = viewBinding.usersRecycler
                 val layoutManager = LinearLayoutManager(context)
                 recyclerView.layoutManager = layoutManager
                 recyclerView.adapter = wordAdapter
@@ -45,7 +49,7 @@ class TranslateFragment: Fragment() {
                 viewBinding.loadingLayout.visibility = View.GONE
                 Snackbar
                     .make(viewBinding.root, "Error: ${appState.error}", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.getData() }
+                    .setAction("Reload") { model.getData(word, true) }
                     .show()
             }
         }
@@ -60,5 +64,12 @@ class TranslateFragment: Fragment() {
                     putString(ARG_WORD, word)
                 }
             }
+    }
+
+    private fun iniViewModel() {
+        val viewModel: TranslateViewModel by requireScopeActivity<ScopeActivity>().inject()
+
+        model = viewModel
+        model.subscribe().observe(this.viewLifecycleOwner) { renderData(it) }
     }
 }
